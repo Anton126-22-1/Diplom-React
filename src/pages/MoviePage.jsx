@@ -37,15 +37,20 @@ export default function MoviePage() {
   const [visibleSlides, setVisibleSlides] = useState(3);
 
   // --- Керування слайдером ---
-  const handleNextSlide = () => {
-  const maxIndex = actors.length - visibleSlides;
-  setCurrentSlideIndex((prevIndex) => (prevIndex >= maxIndex ? 0 : prevIndex + 1));
+const maxIndex = Math.max(actors.length - visibleSlides, 0);
+
+const handleNextSlide = () => {
+  setCurrentSlideIndex((prevIndex) =>
+    prevIndex >= maxIndex ? 0 : prevIndex + 1.5
+  );
 };
 
 const handlePrevSlide = () => {
-  const maxIndex = actors.length - visibleSlides;
-  setCurrentSlideIndex((prevIndex) => (prevIndex <= 0 ? maxIndex : prevIndex - 1));
+  setCurrentSlideIndex((prevIndex) =>
+    prevIndex <= 0 ? maxIndex : prevIndex - 1
+  );
 };
+
 
   // Адаптивність: кількість видимих слайдів
   useEffect(() => {
@@ -288,8 +293,10 @@ const handlePrevSlide = () => {
                 <div
                   className="sliderTrack"
                   style={{
-                    transform: `translateX(-${currentSlideIndex * (100 / visibleSlides)}%)`,
-                    width: `${(actors.length / visibleSlides) * 100}%`,
+                    transform: `translateX(-${(currentSlideIndex * 100) / visibleSlides}%)`,
+                    width: `${(actors.length * 100) / visibleSlides}%`,
+                    display: "flex",
+                    transition: "transform 0.5s ease-in-out",
                   }}
                 >
                   {actors.map((actor, index) => (
