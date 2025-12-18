@@ -2,11 +2,11 @@
   {
   "movieId": "1",
   "cast": [
-    { "name": "Jason Momoa", "role": "Garrett 'Scavenger' Garrison", "photo": "/img/cast/jason_momoa.jpg" },
-    { "name": "Jack Black", "role": "Henry", "photo": "/img/cast/jack_black.jpg" },
-    { "name": "Emma Stone", "role": "Natalie", "photo": "/img/cast/emma_stone.jpg" },
-    { "name": "Dave Bautista", "role": "Don", "photo": "/img/cast/dave_bautista.jpg" },
-    { "name": "Chris Pratt", "role": "Steve the Wizard", "photo": "/img/cast/chris_pratt.jpg" }
+    { "name": "Jason Momoa", "role": "Garrett 'Scavenger' Garrison", "photo": "/img/cast/Momoa.jpg" },
+    { "name": "Jack Black", "role": "Henry", "photo": "/img/cast/Jack Black.webp" },
+    { "name": "Emma Stone", "role": "Natalie", "photo": "/img/cast/Emma Stone.webp" },
+    { "name": "Dave Bautista", "role": "Don", "photo": "/img/cast/Dave Bautista.webp" },
+    { "name": "Chris Pratt", "role": "Steve the Wizard", "photo": "/img/cast/Chris Pratt.webp" }
   ]
  },
   {
@@ -23,22 +23,22 @@
   {
     "movieId": "3",
     "cast": [
-      { "name": "Evan Peters", "role": "Clover", "photo": "/img/cast/evan.jpg" },
-      { "name": "Sophia Turner", "role": "Lena", "photo": "/img/cast/sophia.jpg" },
-      { "name": "Jacob Reed", "role": "Ryan", "photo": "/img/cast/jacob.jpg" },
-      { "name": "Mia Collins", "role": "Hannah", "photo": "/img/cast/mia.jpg" },
-      { "name": "Lucas Grant", "role": "The Masked Killer", "photo": "/img/cast/killer.jpg" }
+      { "name": "Michael Cimino", "role": "Max", "photo": "/img/cast/Michael Cimino.jpg" },
+      { "name": "Ella Rubin ", "role": "Clover", "photo": "/img/cast/Ella Rubin.jpg" },
+      { "name": "Maia Mitchell", "role": "Melanie Paul", "photo": "/img/cast/Maia Mitchell.jpg" },
+      { "name": "Peter Stormare", "role": "Dr. Alan Hill", "photo": "/img/cast/Peter Stormare.jpg" },
+      { "name": "Odessa A’zion", "role": "Nina Riley", "photo": "/img/cast/Odessa A’zion.jpg" }
     ]
   },
   {
     "movieId": "4",
     "cast": [
-      { "name": "Ben Affleck", "role": "Christian Wolff", "photo": "/img/cast/affleck.jpg" },
-      { "name": "Jon Bernthal", "role": "Brax Wolff", "photo": "/img/cast/bernthal.jpg" },
-      { "name": "Cynthia Addai-Robinson", "role": "Marybeth Medina", "photo": "/img/cast/cynthia.jpg" },
-      { "name": "J.K. Simmons", "role": "Ray King", "photo": "/img/cast/simmons.jpg" },
-      { "name": "Rebecca Ferguson", "role": "Lydia Trent", "photo": "/img/cast/rebecca.jpg" },
-      { "name": "Jeffrey Dean Morgan", "role": "Elliot Grayson", "photo": "/img/cast/morgan.jpg" }
+      { "name": "Ben Affleck", "role": "Christian Wolff", "photo": "/img/cast/Ben Affleck.jpg" },
+      { "name": "Jon Bernthal", "role": "Brax Wolff", "photo": "/img/cast/Jon Bernthal.jpg" },
+      { "name": "Cynthia Addai-Robinson", "role": "Marybeth Medina", "photo": "/img/cast/Cynthia Addai-Robinson.jpg" },
+      { "name": "J.K. Simmons", "role": "Ray King", "photo": "/img/cast/J.K. Simmons.jpg" },
+      { "name": "Daniella Pineda ", "role": "Anaïs", "photo": "/img/cast/Daniella Pineda.jpg" },
+      { "name": "Robert Morgan", "role": "Anaïs", "photo": "/img/cast/Robert Morgan.jpg" }
     ]
   },
    {
