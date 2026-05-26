@@ -1,128 +1,326 @@
-/* src/pages/SessionsPage.jsx */
-import React, { useState, useEffect } from 'react';
-import SessionCard from '../components/SessionCard';
-import Modal from '../components/Modal/Modal.jsx';  
-import styles from '../styles/sessionspage.module.css';
+// src/pages/SessionsPage.jsx
+
+import React, {
+  useState,
+  useEffect,
+} from "react";
+
+import SessionCard
+from "../components/SessionCard";
+
+import Modal
+from "../components/Modal/Modal.jsx";
+
+import styles
+from "../styles/sessionspage.module.css";
 
 export default function SessionsPage() {
-  const [sessionsData, setSessionsData] = useState([]);
-  const [moviesData, setMoviesData]     = useState([]);
-  const [selectedDate, setSelectedDate] = useState('');
-  const [selectedSession, setSelectedSession] = useState(null);
+
+  const [sessionsData,
+    setSessionsData] =
+    useState([]);
+
+  const [moviesData,
+    setMoviesData] =
+    useState([]);
+
+  const [selectedDate,
+    setSelectedDate] =
+    useState("");
+
+  const [selectedSession,
+    setSelectedSession] =
+    useState(null);
 
   useEffect(() => {
-    Promise.all([
-      fetch('/data/sessions.json').then(res => res.json()),
-      fetch('/data/movies.json').then(res => res.json())
-    ]).then(([sessions, movies]) => {
-      setSessionsData(sessions);
-      setMoviesData(movies);
-      const today = new Date().toISOString().slice(0,10);
-      setSelectedDate(
-        sessions.some(s => s.date === today)
-          ? today
-          : sessions[0]?.date || today
-      );
-    });
+
+    const fetchData =
+      async () => {
+
+      try {
+
+        const [
+          sessionsRes,
+          moviesRes,
+        ] =
+          await Promise.all([
+            fetch(
+              "http://localhost:5000/api/sessions"
+            ),
+            fetch(
+              "http://localhost:5000/api/movies"
+            ),
+          ]);
+
+        const sessions =
+          await sessionsRes.json();
+
+        const movies =
+          await moviesRes.json();
+
+        setSessionsData(
+          sessions
+        );
+
+        setMoviesData(
+          movies
+        );
+
+      } catch (err) {
+
+        console.error(err);
+      }
+    };
+
+    fetchData();
+
   }, []);
 
-  // Унікальні дати
-  const dateTabs = Array.from(new Set(sessionsData.map(s => s.date)))
-                        .sort();
+  useEffect(() => {
 
-  // Сеанси на обрану дату
-  const sessionsOnDate = sessionsData.filter(s => s.date === selectedDate);
+    if (
+      !sessionsData.length
+    )
+      return;
 
-  // Групування за фільмом
-  const sessionsByMovie = sessionsOnDate.reduce((acc, sess) => {
-    (acc[sess.movieId] = acc[sess.movieId] || []).push(sess);
-    return acc;
-  }, {});
+    const today =
+      new Date()
+        .toISOString()
+        .slice(0, 10);
 
-  // Масив { movie, sessions }
-  const moviesToShow = Object.entries(sessionsByMovie)
-    .map(([movieId, sessions]) => ({
-      movie:    moviesData.find(m => String(m.id) === movieId),
-      sessions
-    }))
-    .slice(0,6);
+    const hasToday =
+      sessionsData.some(
+        (s) =>
+          s.date === today
+      );
 
-  // Клік на кнопку "Order Ticket"
-  const handleOrderClick = ({ movie, sessions }) => {
-    const sess = sessions[0];
-    setSelectedSession({
-      poster: movie.poster,
-      title:  movie.title,
-      date:   sess.date,
-      time:   sess.time,
-      hall:   sess.hall
-    });
-  };
+    setSelectedDate(
 
-  const handleCloseModal = () => {
-    setSelectedSession(null);
-  };
+      hasToday
+
+        ? today
+
+        : sessionsData[0]
+            ?.date || ""
+    );
+
+  }, [sessionsData]);
+
+  const dateTabs =
+    [
+      ...new Set(
+        sessionsData.map(
+          (s) => s.date
+        )
+      ),
+    ].sort(
+      (a, b) =>
+        new Date(a) -
+        new Date(b)
+    );
+
+  const sessionsOnDate =
+    sessionsData.filter(
+      (s) =>
+        s.date ===
+        selectedDate
+    );
+
+  const sessionsByMovie =
+    sessionsOnDate.reduce(
+      (acc, sess) => {
+
+        if (!sess.movieId)
+          return acc;
+
+        (
+          acc[sess.movieId] =
+            acc[
+              sess.movieId
+            ] || []
+        ).push(sess);
+
+        return acc;
+      },
+      {}
+    );
+
+  const moviesToShow =
+    Object.entries(
+      sessionsByMovie
+    )
+      .map(
+        ([movieId,
+          sessions]) => {
+
+          const movie =
+            moviesData.find(
+              (m) =>
+                String(
+                  m._id
+                ) ===
+                String(
+                  movieId
+                )
+            );
+
+          return movie
+            ? {
+                movie,
+                sessions,
+              }
+            : null;
+        }
+      )
+      .filter(Boolean);
+
+  const handleOrderClick =
+    ({
+      movie,
+      sessions,
+    }) => {
+
+      const sess =
+        sessions?.[0];
+
+      if (
+        !movie ||
+        !sess
+      )
+        return;
+
+      setSelectedSession({
+
+        poster:
+          movie.poster,
+
+        title:
+          movie.title,
+
+        hall:
+          sess.hall,
+
+        movieId:
+          movie._id,
+
+        sessionId:
+          sess._id,
+      });
+    };
 
   return (
-    <div className={styles.sessionsPage}>
-      <h1 className={styles.pageTitle}>SESSIONS</h1>
+    <div
+      className={
+        styles.sessionsPage
+      }
+    >
+      <h1
+        className={
+          styles.pageTitle
+        }
+      >
+        SESSIONS
+      </h1>
 
-      <div className={styles.tabs}>
-        {dateTabs.map(date => {
-          const label = new Date(date).toLocaleDateString('en-US', {
-            day:   '2-digit',
-            month: 'long'
-          }).toUpperCase();
-
-          return (
+      <div
+        className={
+          styles.tabs
+        }
+      >
+        {dateTabs.map(
+          (date) => (
             <button
               key={date}
-              className={`${styles.tab} ${date === selectedDate ? styles.activeTab : ''}`}
-              onClick={() => setSelectedDate(date)}
+              className={`${styles.tab}
+              ${
+                date ===
+                selectedDate
+                  ? styles.activeTab
+                  : ""
+              }`}
+              onClick={() =>
+                setSelectedDate(
+                  date
+                )
+              }
             >
-              {label}
+              {date}
             </button>
-          );
-        })}
-
-        <div className={styles.datePickerWrapper}>
-          <input
-            type="date"
-            className={styles.datePicker}
-            value={selectedDate}
-            onChange={e => setSelectedDate(e.target.value)}
-          />
-          <span className={styles.arrow}>▾</span>
-        </div>
+          )
+        )}
       </div>
 
-      <div className={styles.sessionsGrid}>
+      <div
+        className={
+          styles.sessionsGrid
+        }
+      >
         {moviesToShow.length ? (
-          moviesToShow.map(({ movie, sessions }) => (
-            <SessionCard
-              key={movie.id}
-              movie={movie}
-              sessions={sessions}
-              onOrder={() => handleOrderClick({ movie, sessions })}
-            />
-          ))
+
+          moviesToShow.map(
+            ({
+              movie,
+              sessions,
+            }) => (
+              <SessionCard
+                key={
+                  movie._id
+                }
+                movie={movie}
+                sessions={
+                  sessions
+                }
+                onOrder={() =>
+                  handleOrderClick(
+                    {
+                      movie,
+                      sessions,
+                    }
+                  )
+                }
+              />
+            )
+          )
+
         ) : (
-          <p className={styles.noSessions}>
-            No sessions available for this date.
+
+          <p>
+            No sessions
           </p>
         )}
       </div>
 
       {selectedSession && (
+
         <Modal
           isOpen={true}
-          onClose={handleCloseModal}
-          poster={selectedSession.poster}
-          title={selectedSession.title}
-          date={selectedSession.date}
-          time={selectedSession.time}
-          hall={selectedSession.hall}
+          onClose={() =>
+            setSelectedSession(
+              null
+            )
+          }
+
+          poster={
+            selectedSession.poster
+          }
+
+          title={
+            selectedSession.title
+          }
+
+          hall={
+            selectedSession.hall
+          }
+
+          movieId={
+            selectedSession.movieId
+          }
+
+          sessionId={
+            selectedSession.sessionId
+          }
         />
+
       )}
     </div>
   );

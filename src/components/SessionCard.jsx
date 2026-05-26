@@ -13,7 +13,7 @@ const SessionCard = ({ movie = {}, sessions = [], onOrder }) => {
     releaseDate        = '—',
     country            = '—',
     duration           = '—',
-    ageRestriction     = '—',      // ось воно
+    ageRestriction     = '—',      
     genre,
     genres
   } = movie;

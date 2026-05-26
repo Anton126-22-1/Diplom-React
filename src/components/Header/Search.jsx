@@ -7,22 +7,30 @@ const Search = () => {
   const [filteredMovies, setFilteredMovies] = useState([]);
   const [allMovies, setAllMovies] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
+
   const navigate = useNavigate();
   const searchRef = useRef(null);
 
-  // Завантаження всіх фільмів з JSON або API
+  // 🔥 ПІДКЛЮЧЕННЯ ДО БД (MongoDB API)
   useEffect(() => {
-    fetch("/data/movies.json")
-      .then((response) => response.json())
-      .then((data) => setAllMovies(data));
+    fetch("http://localhost:5000/api/movies")
+      .then(res => res.json())
+      .then(data => {
+        setAllMovies(Array.isArray(data) ? data : []);
+      })
+      .catch(err => {
+        console.error("Movies API error:", err);
+        setAllMovies([]);
+      });
   }, []);
 
-  // Фільтрація фільмів на основі введеної букви
+  // 🔍 live search
   useEffect(() => {
     if (query.trim()) {
-      const filtered = allMovies.filter((movie) =>
-        movie.title.toLowerCase().includes(query.toLowerCase())
+      const filtered = allMovies.filter(movie =>
+        movie.title?.toLowerCase().includes(query.toLowerCase())
       );
+
       setFilteredMovies(filtered.slice(0, 4));
       setShowSuggestions(true);
     } else {
@@ -34,7 +42,7 @@ const Search = () => {
   const handleSearch = () => {
     if (query.trim()) {
       navigate(`/search?search=${encodeURIComponent(query)}`);
-      setShowSuggestions(false); // Закриваємо меню після натискання Enter
+      setShowSuggestions(false);
     }
   };
 
@@ -44,7 +52,6 @@ const Search = () => {
     setQuery("");
   };
 
-  // Закриття меню при натисканні поза контейнером або на Enter
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (searchRef.current && !searchRef.current.contains(event.target)) {
@@ -53,12 +60,9 @@ const Search = () => {
     };
 
     document.addEventListener("click", handleClickOutside);
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
+    return () => document.removeEventListener("click", handleClickOutside);
   }, []);
 
-  // Закриття меню при натисканні Enter
   const handleKeyDown = (event) => {
     if (event.key === "Enter") {
       handleSearch();
@@ -75,6 +79,7 @@ const Search = () => {
         }}
       >
         <div className={styles.search__icon}></div>
+
         <input
           className={styles.search__field}
           placeholder="What are you looking for"
@@ -82,8 +87,9 @@ const Search = () => {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setShowSuggestions(true)}
-          onKeyDown={handleKeyDown} // Додаємо обробник натискання клавіш
+          onKeyDown={handleKeyDown}
         />
+
         <button type="submit" className={styles.search__submit}>
           <img src="/icons/search_icon.svg" alt="search" />
         </button>
@@ -92,10 +98,10 @@ const Search = () => {
       {showSuggestions && filteredMovies.length > 0 && (
         <div className={styles.suggestions}>
           <div className={styles.movieList}>
-            {filteredMovies.map((movie, index) => (
-              <div key={index} className={styles.movieItem}>
+            {filteredMovies.map(movie => (
+              <div key={movie._id} className={styles.movieItem}>
                 <button
-                  onClick={() => handleMovieSelect(movie.id)}
+                  onClick={() => handleMovieSelect(movie._id)}
                   className={styles.movieLink}
                 >
                   <img src={movie.poster} alt={movie.title} />

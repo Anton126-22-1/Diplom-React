@@ -1,102 +1,115 @@
-import React, { useState, useEffect } from "react";
-import { createContext } from "react";
+import React, { useState, useEffect, createContext, useContext } from "react";
+import jwtDecode from "jwt-decode";
 
-export const AuthContext = createContext({
-  user: null,
-  isAuthenticated: false,
-  status: "loading",
-  login: () => {},
-  register: () => {},
-  logout: () => {},
-});
+export const AuthContext = createContext();
 
-const AuthProvider = ({ children }) => {
-  const [status, setStatus] = useState("loading"); // loading, authorized, unauthenticated
-  const [user, setUser] = useState(null); // дані користувача
+export const AuthProvider = ({ children }) => {
+  const [status, setStatus] = useState("loading");
+  const [user, setUser] = useState(null);
+  const [token, setToken] = useState(null);
 
-  const isAuthenticated = status === "authorized"; // швидка перевірка на авторизацію користувача
+  const isAuthenticated = status === "authorized";
 
-  const login = async ({ username, password }) => {
+  const login = async ({ email, password }) => {
     try {
-      const response = await fetch("/data/users.json");
+      const res = await fetch("http://localhost:5000/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ email, password })
+      });
 
-      if (!response.ok) {
-        throw new Error("Не вдалося завантажити дані користувачів");
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Login error");
       }
 
-      const res_data = await response.json();
-
-      const findOne = res_data.find((user) => user.username === username);
-
-      if (!findOne) {
-        const error = new Error("Користувача не знайдено");
-        error.field = "login";
-        throw error;
+      if (!data.token) {
+        throw new Error("Token not received from server");
       }
 
-      // перевірка пароля
-      if (password !== findOne.password) {
-        const error = new Error("Невірний пароль");
-        error.field = "password";
-        throw error;
-      }
+      localStorage.setItem("token", data.token);
 
-      localStorage.setItem("user", JSON.stringify(findOne));
-      setUser(findOne);
+      const decoded = jwtDecode(data.token);
+
+      setToken(data.token); 
+      setUser(decoded);
       setStatus("authorized");
 
-      return { success: true, user: findOne };
-    } catch (error) {
-      console.error(error);
-      setStatus("unauthenticated");
-      return { success: false, error: error.message, field: error?.field };
-    }
-  };
-
-  const register = async ({ username, password }) => {
-    try {
-      // логика для створення користувача
-      setUser({username});
-      setStatus("authorized");
       return { success: true };
     } catch (error) {
-      console.error(error);
+      console.error("LOGIN ERROR:", error);
+      setStatus("unauthenticated");
+
       return { success: false, error: error.message };
     }
   };
 
+  const register = async ({ username, email, password }) => {
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ username, email, password })
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.message || "Register error");
+      }
+
+      return { success: true };
+    } catch (error) {
+      return { success: false, error: error.message };
+    }
+  };
 
   const logout = () => {
-    localStorage.removeItem("user");
+    localStorage.removeItem("token");
     setUser(null);
+    setToken(null); 
     setStatus("unauthenticated");
   };
 
   useEffect(() => {
-    const userDataString = localStorage.getItem("user");
+    const storedToken = localStorage.getItem("token");
 
-    if (userDataString) {
-      try {
-        const userData = JSON.parse(userDataString);
-        setUser(userData);
-      } catch (error) {
-        setStatus("unauthenticated");
-        logout();
-      } finally {
-        setStatus("authorized");
-      }
-    } else {
+    if (!storedToken) {
       setStatus("unauthenticated");
+      return;
+    }
+
+    try {
+      const decoded = jwtDecode(storedToken);
+
+      setToken(storedToken); 
+      setUser(decoded);
+      setStatus("authorized");
+    } catch (err) {
+      logout();
     }
   }, []);
 
   return (
     <AuthContext.Provider
-      value={{ status, isAuthenticated, login, register, logout, user }}
+      value={{
+        status,
+        isAuthenticated,
+        token, 
+        login,
+        register,
+        logout,
+        user
+      }}
     >
       {children}
     </AuthContext.Provider>
   );
 };
 
-export default AuthProvider;
+export const useAuth = () => useContext(AuthContext);

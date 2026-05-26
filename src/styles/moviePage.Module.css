@@ -2,7 +2,6 @@
 
 .movie-page {
   width: 100%;
-  min-height: 100vh;
   background: #111;
   color: #fff;
   padding: 1.5rem;
@@ -166,7 +165,7 @@
 
 /* Трейлер */
 .movie-trailer {
-  margin-bottom: 2rem;
+  margin-bottom: 0;
 }
 
 .movie-trailer h2 {
@@ -380,4 +379,48 @@
   width: 20px;
   height: 20px;
   object-fit: contain;
+}
+.session-item {
+  margin-bottom: 20px;
+}
+
+.session-date {
+  font-size: 18px;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 10px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
+}
+
+.session-times {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+
+  justify-content: center;
+}
+.session-time-btn {
+  background: #ff9800;
+  border: none;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s;
+}
+
+.session-time-btn:hover {
+  background: #ffb74d;
+  transform: scale(1.05);
+}
+
+.no-sessions {
+  color: #999;
+  margin-top: 10px;
 }

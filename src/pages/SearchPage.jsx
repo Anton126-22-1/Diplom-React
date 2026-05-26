@@ -31,32 +31,36 @@ function SearchresultPage() {
   }, [query]);
 
   useEffect(() => {
-    fetch('/data/movies.json')
-      .then(response => response.json())
-      .then(data => {
-        const genreSet = new Set();
-        const yearSet = new Set();
-        const ageSet = new Set();
-        const countrySet = new Set();
+  fetch("http://localhost:5000/api/movies")
+    .then(response => response.json())
+    .then(data => {
 
-        data.forEach(movie => {
-          movie.genres.forEach(genre => genreSet.add(genre));
-          const year = new Date(movie.releaseDate).getFullYear();
-          yearSet.add(year);
-          ageSet.add(movie.ageRestriction);
-          countrySet.add(movie.country);
-        });
+      const genreSet = new Set();
+      const yearSet = new Set();
+      const ageSet = new Set();
+      const countrySet = new Set();
 
-        setGenres([...genreSet]);
-        setYears([...yearSet].sort((a, b) => b - a));
-        setAges([...ageSet]);
-        setCountries([...countrySet]);
-        setMovies(data);
-      })
-      .catch(error => {
-        console.error("Error fetching movies data:", error);
+      data.forEach(movie => {
+        movie.genres?.forEach(genre => genreSet.add(genre));
+
+        const year = new Date(movie.releaseDate).getFullYear();
+        yearSet.add(year);
+
+        ageSet.add(movie.ageRestriction);
+        countrySet.add(movie.country);
       });
-  }, []);
+
+      setGenres([...genreSet]);
+      setYears([...yearSet].sort((a, b) => b - a));
+      setAges([...ageSet]);
+      setCountries([...countrySet]);
+
+      setMovies(data || []);
+    })
+    .catch(error => {
+      console.error("Error fetching movies from DB:", error);
+    });
+}, []);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -159,7 +163,9 @@ function SearchresultPage() {
   const filteredMovies = movies.filter(movie => {
     const matchQuery = query ? movie.title.toLowerCase().includes(query) : true;
     const matchGenre = selectedGenre ? movie.genres.includes(selectedGenre) : true;
-    const matchYear = selectedYear ? new Date(movie.releaseDate).getFullYear() === selectedYear : true;
+    const matchYear = selectedYear
+      ? new Date(movie.releaseDate).getFullYear() === Number(selectedYear)
+      : true;    
     const matchAge = selectedAge ? movie.ageRestriction === selectedAge : true;
     const matchCountry = selectedCountry ? movie.country === selectedCountry : true;
     return matchQuery && matchGenre && matchYear && matchAge && matchCountry;
@@ -265,7 +271,7 @@ function SearchresultPage() {
           {filteredMovies.length > 0 ? (
             currentMovies.map((movie, index) => (
               <div key={index} className={styles.moviePosterWrapper}>
-                <Link to={`/movie/${movie.id}`}>
+                <Link to={`/movie/${movie._id}`}>
                   <img
                     src={movie.poster}
                     alt={movie.title}

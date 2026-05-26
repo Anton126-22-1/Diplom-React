@@ -38,7 +38,14 @@
   margin-left: 15px;
   border-radius: 10px;
 }
-
+.slideImage {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  image-rendering: auto;
+}
 /* Логіка слайдів */
 .sliderTrack {
   display: flex;
@@ -48,23 +55,16 @@
 
 .slide {
   min-width: 100%;
-  height: 100%;
+  height: 371px;
   position: relative;
   overflow: hidden;
-  border-radius: 10px;
-}
-
-.slideImage {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 10px;
+  border-radius: 20px;
 }
 
 .slideTitle {
   position: absolute;
   bottom: 20px;
-  left: 2%;
+  left: 20px;
   color: white;
   padding: 10px;
   border-radius: 5px;

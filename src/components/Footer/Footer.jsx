@@ -48,9 +48,6 @@ export default function Footer() {
                 <li>
                   <a href="/signUp">Sign Up</a>
                 </li>
-                <li>
-                  <a href="/favorites">Favourites</a>
-                </li>
               </ul>
             </div>
 

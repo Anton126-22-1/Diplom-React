@@ -7,10 +7,10 @@ export default function NotFoundPage() {
     <div className="pageBackground404">
       <div className="container404 notfound-container">
         <h1>404</h1>
-        <h2>Сторінку не знайдено</h2>
-        <p>На жаль, сторінка, яку ви шукаєте, не існує або була видалена.</p>
+        <h2>Page not found</h2>
+        <p>Unfortunately, the page you are looking for does not exist or has been deleted.</p>
         <Link to="/home" className="back-link">
-          Повернутися на головну
+          Return to home page
         </Link>
       </div>
     </div>

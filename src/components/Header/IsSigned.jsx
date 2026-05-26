@@ -9,6 +9,7 @@ const IsSigned = () => {
     return (
       <div className={styles.wrapper}>
         {/* favorites */}
+        {/*
         <div className={styles.col}>
           <a className={styles.col__link} href="/favorites">
             <div className={styles.col__icon}>
@@ -17,6 +18,7 @@ const IsSigned = () => {
             <h3 className={styles.col__text}>Favorites</h3>
           </a>
         </div>
+        */}
         {/* profile */}
         <div className={styles.col}>
           <a className={styles.col__link} href="/profile">
