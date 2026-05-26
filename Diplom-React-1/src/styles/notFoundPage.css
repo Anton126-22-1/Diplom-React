@@ -1,0 +1,60 @@
+/* Загальний фон сторінки */
+.pageBackground404 {
+  background-color: #1f1f25;  /* світло-сірий фон по всьому екрану */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+  text-align: center; /* текст по центру */
+}
+
+/* Центральний контейнер */
+.container404 {
+  max-width: 600px;
+  width: 100%;
+ /* світліший блок на сірому фоні */
+ /* легка тінь для виділення */
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* по центру вертикально */
+}
+
+/* Стиль заголовка */
+.notfound-container h1 {
+  font-size: 160px;
+  color: #e74c3c;
+  margin: 0;
+}
+
+.notfound-container h2 {
+  font-size: 32px;
+  margin: 10px 0;
+  color: #ededed; /* темний текст для контрасту */
+}
+
+.notfound-container p {
+  font-size: 18px;
+  color: #ededed; /* сірий текст */
+  margin-bottom: 30px;
+}
+
+/* Стиль кнопки повернення на головну */
+.back-link {
+  display: inline-block;
+  width: 550px; /* кнопка на всю ширину контейнера */
+  max-width: 700px; /* обмеження максимальної ширини */
+  text-align: center; /* текст кнопки по центру */
+  text-decoration: none;
+  color: white;
+  background-color: #ff8c00;
+  padding: 15px 0;
+  border-radius: 8px;
+  font-size: 18px;
+  transition: 0.3s;
+}
+
+.back-link:hover {
+  background-color: #bdbd13;
+}
